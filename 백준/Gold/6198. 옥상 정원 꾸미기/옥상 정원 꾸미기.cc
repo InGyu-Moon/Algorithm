@@ -18,7 +18,7 @@ int main() {
     cin >> n;
 
     for (int i = 1; i <= n; i++) {
-        long long height;
+        int height;
         cin >> height;
 
         while (!stk.empty()) {
