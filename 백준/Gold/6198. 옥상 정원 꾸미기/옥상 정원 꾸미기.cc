@@ -1,26 +1,42 @@
-#include <iostream>
-#include <stack>
+#include<iostream>
+#include<vector>
+#include<stack>
+
 using namespace std;
 
-#define ll long long
-
-stack<int> s;
-int n;
-ll ans;
-
+vector<int> vec;
 int main() {
-  ios_base::sync_with_stdio(0);
-  cin.tie(0);
 
-  cin >> n;
-  ll h;
-  while (n--) {
-    cin >> h;
-    while(!s.empty() && s.top() <= h)
-      s.pop();
-    ans += s.size();
-    s.push(h);
-  }
-  cout << ans;
-  return 0;
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
+    stack<int> stk;
+
+    long long cnt = 0;
+
+    int n;
+    cin >> n;
+
+    for (int i = 1; i <= n; i++) {
+        long long height;
+        cin >> height;
+
+        while (!stk.empty()) {
+            if (stk.top() > height) {
+                cnt = cnt + stk.size();
+                break;
+            }
+            else {
+                stk.pop();
+            }
+        }
+        stk.push(height);
+        //cout << "[ "  << cnt << " ]";
+    }
+
+    cout << cnt;
+
+
+
+    return 0;
 }
