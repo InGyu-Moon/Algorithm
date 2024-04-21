@@ -1,74 +1,96 @@
-#include <bits/stdc++.h>
+#include<iostream>
+#include<algorithm>
+#include<queue>
 using namespace std;
-#define X first
-#define Y second
-int TC, bX, bY;
-int board[1002][1002];
-int visF[1002][1002];
-int visS[1002][1002];
-int dx[4] = {0, 0, 1, -1};
-int dy[4] = {1, -1, 0, 0};
-int main(void) {
-  ios::sync_with_stdio(0);
-  cin.tie(0);
 
-  cin >> TC;
-  for (int testNo = 0; testNo < TC; testNo++) {
-    bool escape = false;
-    queue<pair<int, int>> Qf = {}, Qs = {};
-    cin >> bY >> bX;
-    for (int i = 0; i < bX; i++) {
-      fill(visF[i], visF[i] + bY, 0);
-      fill(visS[i], visS[i] + bY, 0);
-    }
-    for (int i = 0; i < bX; i++)
-      for (int j = 0; j < bY; j++) {
-        char c;
-        cin >> c;
-        if (c == '#') board[i][j] = -1;
-        else {
-          if (c == '@') {
-            Qs.push({i, j});
-            visS[i][j] = 1;
-          } 
-          else if (c == '*') {
-            Qf.push({i, j});
-            visF[i][j] = 1;
-          }
-          board[i][j] = 0;
+int dx[4] = { 1,-1,0,0 };
+int dy[4] = { 0,0,1,-1 };
+int t;
+int w, h;
+char maze[1000][1000];
+int visited[1000][1000] = {};
+int fire[1000][1000] = {};
+queue<pair<int, int>> f;
+queue<pair<int, int>> q;
+
+void bfs() {
+   
+    while (!q.empty()) {
+        int x = q.front().first;
+        int y = q.front().second;
+        q.pop();
+        for (int i = 0; i < 4; i++) {
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+
+            
+            if (nx < 0 || ny < 0 || nx >= w || ny >= h) {
+                cout << visited[x][y] << "\n";
+                return;
+            }
+            if (maze[nx][ny] == '#' || maze[nx][ny] == '*') continue;
+            
+            if (visited[nx][ny]) continue;
+
+            if (fire[nx][ny] != 0 && fire[nx][ny] <= visited[x][y] + 1) continue;
+            
+            visited[nx][ny] = visited[x][y] + 1;
+            q.push({ nx,ny });
         }
-      }
-    while (!Qf.empty()) {
-      auto v = Qf.front();
-      Qf.pop();
-      for (int k = 0; k < 4; k++) {
-        int nx = v.X + dx[k];
-        int ny = v.Y + dy[k];
-        if (nx < 0 || bX <= nx || ny < 0 || bY <= ny) continue;
-        if (board[nx][ny] == -1) continue;
-        if (visF[nx][ny]) continue;
-        visF[nx][ny] = visF[v.X][v.Y] + 1;
-        Qf.push({nx, ny});
-      }
     }
-    while ((!Qs.empty()) && (!escape)) {
-      auto v = Qs.front();
-      Qs.pop();
-      for (int k = 0; k < 4; k++) {
-        int nx = v.X + dx[k];
-        int ny = v.Y + dy[k];
-        if (nx < 0 || bX <= nx || ny < 0 || bY <= ny) {
-          cout << visS[v.X][v.Y] << '\n';
-          escape = true;
-          break;
+    cout << "IMPOSSIBLE\n";
+    return;
+}
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+
+    cin >> t;
+    while (t--) {
+        cin >> h >> w;
+
+        while (!q.empty()) q.pop();
+        while (!f.empty()) f.pop();
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                visited[i][j] = 0;
+                fire[i][j] = 0;
+            }
         }
-        if (board[nx][ny] == -1) continue;
-        if (visS[nx][ny]) continue;
-        if (visF[nx][ny] != 0 && visF[nx][ny] <= visS[v.X][v.Y] + 1) continue;
-        visS[nx][ny] = visS[v.X][v.Y] + 1;
-        Qs.push({nx, ny});
-      }
+
+        string str;
+        for (int i = 0; i < w; i++) {
+            cin >> str;
+            for (int j = 0; j < h; j++) {
+                maze[i][j] = str[j];
+                if (str[j] == '*') {
+                    f.push({ i,j });
+                    fire[i][j] = 1;
+                }
+                if (str[j] == '@') {
+                    q.push({ i,j });
+                    visited[i][j] = 1;
+                }
+            }
+        }
+
+        while (!f.empty()) {
+            int x = f.front().first;
+            int y = f.front().second;
+            f.pop();
+            for (int i = 0; i < 4; i++) {
+                int nx = x + dx[i];
+                int ny = y + dy[i];
+                if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+                if (maze[nx][ny] == '#') continue;
+                if (fire[nx][ny]) continue; 
+                fire[nx][ny] = fire[x][y] + 1;
+                f.push({ nx,ny });
+            }
+        }
+
+        bfs();
+
     }
-    if (!escape) cout << "IMPOSSIBLE" << '\n';
-  }
+    return 0;
 }
