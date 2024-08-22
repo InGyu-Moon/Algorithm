@@ -19,13 +19,8 @@ public class Main {
 			ans++;
 			return;
 		}
-		if (flag)
-			return;
 		// 재귀
 		for (int i = 0; i < 3; i++) {
-			if (flag) {
-				return;
-			}
 			int na = a + next[i];
 			int nb = b + 1;
 			if (na < 0 || na == r || visited[na][nb]) // visited(방문,X) 또는 범위 밖이면 continue
