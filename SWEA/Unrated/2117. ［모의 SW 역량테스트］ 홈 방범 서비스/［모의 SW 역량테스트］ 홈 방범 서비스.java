@@ -42,8 +42,8 @@ public class Solution {
 				for (int i = 0; i < n; i++) {
 					for (int j = 0; j < n; j++) {
 						int result = search(i, j, k);
-						int cost2 = (2 * k) * (k - 1) + 1 - (m * result);
-						if (cost2 > 0)
+						cost = (2 * k) * (k - 1) + 1 - (m * result);
+						if (cost > 0)
 							continue;
 						maxVal = maxVal > result ? maxVal : result; // maxVal 최신화
 					}
