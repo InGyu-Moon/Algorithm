@@ -13,12 +13,10 @@ public class Solution {
 
 	public static void sol() {
 		int one = 0, two = 0;
-		int total = 0;
 		for (int i = 0; i < n; i++) {
 			int temp = max - arr[i];
 			two += temp / 2;
 			one += temp % 2;
-			total += temp;
 		}
 
 		if (two == one) {
