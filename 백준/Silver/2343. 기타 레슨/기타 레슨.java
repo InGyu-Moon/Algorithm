@@ -1,38 +1,69 @@
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
+/**
+ * https://chanhuiseok.github.io/posts/baek-22/
+ */
 public class Main {
-public static int[] A;
-public static int[] videoSize;
-public static int sum;
-public static int count;
-public static int N;
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		int M = sc.nextInt();
-		int[] A = new int[N];
-		int start = 0;
-		int end =0;
-		for(int i=0; i<N; i++) {
-			A[i] = sc.nextInt();
-			if(start < A[i]) start = A[i];
-			end = end + A[i];
-		}
-		while(start <= end) {
-			int middle = (start + end)/2;
-			int sum =0;
-			int count =0;
-			for(int i=0; i<N; i++) {
-				if(sum + A[i] > middle) {
-					count++;
-					sum =0;
-				}
-				sum = sum + A[i];
+	static BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+	static StringBuilder output = new StringBuilder();
+	static StringTokenizer token;
+
+	static int n, m;
+	static int[] arr;
+	static int cnt = 0;
+	static int low, high;
+
+	static int temp;
+	static boolean flag;
+
+	public static void check(int mid) {
+		int sum = 0;
+		cnt = 0;
+		for (int i = 0; i < n; i++) {
+			sum += arr[i];
+			if (sum > mid) {
+				cnt++;
+				sum = arr[i];
 			}
-			if(sum != 0) count++;
-			if(count > M) start = middle +1;
-			else end = middle -1;
 		}
-		System.out.println(start);
+		if (sum != 0)
+			cnt++;
 	}
+
+	public static int sol() {
+		int mid;
+
+		while (low <= high) {
+			mid = (low + high) / 2;
+			check(mid);
+
+			if (cnt > m) {
+				low = mid + 1;
+			} else if (m >= cnt) {
+				high = mid - 1;
+			}
+		}
+		return low;
+	}
+
+	public static void init() throws Exception {
+		token = new StringTokenizer(input.readLine());
+		n = Integer.parseInt(token.nextToken());
+		m = Integer.parseInt(token.nextToken());
+		arr = new int[n];
+		token = new StringTokenizer(input.readLine());
+		for (int i = 0; i < n; i++) {
+			arr[i] = Integer.parseInt(token.nextToken());
+			if (low < arr[i])
+				low = arr[i];
+			high += arr[i];
+		}
+	}
+
+	public static void main(String[] args) throws Exception {
+		init();
+		System.out.println(sol());
+	}
+
 }
