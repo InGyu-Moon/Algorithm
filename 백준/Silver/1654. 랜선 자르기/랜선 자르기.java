@@ -28,7 +28,7 @@ public class Main {
 				low = mid + 1;
 			}
 		}
-		return low - 1;
+		return high;
 	}
 
 	public static void init() throws Exception {
