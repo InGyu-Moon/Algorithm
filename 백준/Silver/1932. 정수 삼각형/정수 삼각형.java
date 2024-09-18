@@ -1,47 +1,42 @@
-import java.util.Scanner;
- 
-public class Main {
- 
+import java.util.*;
+import java.io.*;
+
+// 정수 삼각형 1932
+class Main {
+	static BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+	static StringBuilder output = new StringBuilder();
+	static StringTokenizer token;
+
+	static int n;
 	static int[][] arr;
-	static Integer[][] dp;
-	static int N;
- 
-	public static void main(String[] args) {
- 
-		Scanner in = new Scanner(System.in);
- 
-		N = in.nextInt();
- 
-		arr = new int[N][N];
-		dp = new Integer[N][N];
- 
-        
-		// 배열 초기화
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < i + 1; j++) {
-				arr[i][j] = in.nextInt();
+	static int[][] dp;
+
+	public static void sol() {
+		dp[0][0] = arr[0][0];
+		for (int i = 0; i < n - 1; i++) {
+			for (int j = 0; j <= i; j++) {
+				dp[i + 1][j] = Math.max(dp[i + 1][j], arr[i + 1][j] + dp[i][j]);
+				dp[i + 1][j + 1] = Math.max(dp[i + 1][j + 1], arr[i + 1][j + 1] + dp[i][j]);
 			}
 		}
-		
-		// 가장 마지막 행의 값들을 DP의 마지막 행에도 똑같이 복사
-		for (int i = 0; i < N; i++) {
-			dp[N - 1][i] = arr[N - 1][i];
-		}
- 
-		System.out.println(find(0, 0));
- 
 	}
- 
-	
-	static int find(int depth, int idx) {
-		// 마지막 행일 경우 현재 위치의 dp값 반환
-		if(depth == N - 1) return dp[depth][idx];
- 
-		// 탐색하지 않았던 값일 경우 다음 행의 양쪽 값 비교
-		if (dp[depth][idx] == null) {
-			dp[depth][idx] = Math.max(find(depth + 1, idx), find(depth + 1, idx + 1)) + arr[depth][idx];
+
+	public static void init() throws Exception {
+		n = Integer.parseInt(input.readLine());
+		arr = new int[n][n];
+		dp = new int[n][n];
+		for (int i = 0; i < n; i++) {
+			token = new StringTokenizer(input.readLine());
+			for (int j = 0; j <= i; j++) {
+				arr[i][j] = Integer.parseInt(token.nextToken());
+			}
 		}
-		return dp[depth][idx];
- 
+	}
+
+	public static void main(String[] args) throws Exception {
+		init();
+		sol();
+		Arrays.sort(dp[n - 1]);
+		System.out.println(dp[n - 1][n - 1]);
 	}
 }
