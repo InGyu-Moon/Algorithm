@@ -29,10 +29,10 @@ public class Main {
 	public static void sol() {
 		int low = 1;
 		int high = homes[n - 1] - homes[0] + 1;
-		while (low < high) {
+		while (low <= high) {
 			int mid = (high + low) / 2;
 			if (canInstall(mid) < m) {
-				high = mid;
+				high = mid-1;
 			} else {
 				low = mid + 1;
 			}
