@@ -16,11 +16,11 @@ public class Solution {
 	static List<Integer> dp;
 
 	public static int binarySearch(int num) {
-		int low = 1;
-		int high = dp.size();
+		int low = 0;
+		int high = dp.size() - 1;
 		while (low < high) {
 			int mid = (low + high) / 2;
-			if (dp.get(mid - 1) < arr[num]) {
+			if (dp.get(mid) < arr[num]) {
 				low = mid + 1;
 			} else {
 				high = mid;
@@ -32,11 +32,11 @@ public class Solution {
 	public static void sol() {
 		for (int i = 1; i <= n; i++) {
 			int idx = binarySearch(i);
-			if (dp.isEmpty() || dp.get(idx - 1) < arr[i]) {
+			if (dp.isEmpty() || dp.get(idx) < arr[i]) {
 				dp.add(arr[i]);
 			} else {
-				dp.remove(idx - 1);
-				dp.add(idx - 1, arr[i]);
+				dp.remove(idx);
+				dp.add(idx, arr[i]);
 			}
 		}
 	}
