@@ -1,12 +1,5 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
 
@@ -58,20 +51,18 @@ public class Main {
 		}
 		for (int i = 0; i < list.size(); i++) {
 			Pair pair = list.get(i);
-			if (pair.type == 0) { // file 인 경우 그냥 이동
+			if (pair.type == 0) {
 				String file = pair.child;
-				map.get(getName(B)).add(new Pair(file, 0)); // 추가
-				list.remove(i); // 삭제
+				map.get(getName(B)).add(new Pair(file, 0));
+				list.remove(i); 
 				i--;
 			} else if (pair.type == 1) {
-				// 파일이 아니라 폴더 인경우
-				map.get(getName(B)).add(new Pair(pair.child, 1)); // 추가
-				map.get(getName(A)).remove(i); // 삭제
+				map.get(getName(B)).add(new Pair(pair.child, 1));
+				map.get(getName(A)).remove(i);
 				i--;
 			}
 		}
 
-		// 중복 파일 삭제
 		List<Pair> temp = map.get(getName(B));
 		Collections.sort(temp, (a, b) -> a.child.compareTo(b.child));
 		for (int j = 0; j < temp.size() - 1; j++) {
@@ -102,7 +93,6 @@ public class Main {
 			token = new StringTokenizer(input.readLine());
 			String A = token.nextToken();
 			String B = token.nextToken();
-			// A 하위를 B 하위로 이동
 			moveFunc(A, B);
 		}
 	}
@@ -134,11 +124,9 @@ public class Main {
 	static class Pair {
 		String child;
 		int type;
-
 		public Pair(String child, int type) {
 			this.child = child;
 			this.type = type;
 		}
-
 	}
 }
