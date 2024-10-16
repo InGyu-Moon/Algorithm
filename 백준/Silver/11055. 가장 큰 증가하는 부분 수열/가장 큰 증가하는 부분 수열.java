@@ -29,11 +29,8 @@ public class Main {
 				}
 			}
 		}
-		int max = Integer.MIN_VALUE;
-		for (int i : dp) {
-			max = Math.max(i, max);
-		}
-		output.append(max);
+		Arrays.sort(dp);
+		output.append(dp[n - 1]);
 	}
 
 	public static void main(String[] args) throws Exception {
