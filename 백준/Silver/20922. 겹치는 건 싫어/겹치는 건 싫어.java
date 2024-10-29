@@ -1,34 +1,64 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
+	static BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+	static StringBuilder output = new StringBuilder();
+	static StringTokenizer token;
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(in.readLine());
-		int N = Integer.parseInt(st.nextToken());
-		int K = Integer.parseInt(st.nextToken());
-		int arr[] = new int[N];
-		st = new StringTokenizer(in.readLine());
-		for (int i = 0; i < arr.length; i++) {
-			arr[i] = Integer.parseInt(st.nextToken());
-		}
-		int ans = 0;
-		int start = 0;
-		int end = 0;
-		int cnt[] = new int[100001];
-		while(end < arr.length) {
-			while(end < arr.length && cnt[arr[end]] + 1 <= K) {
-				cnt[arr[end]]++;
-				end++;
+	static int n, k;
+
+	static int[] arr, cnt;
+
+	static int max;
+
+	public static void sol() {
+
+		int start = 0, end = 0, len = 0;
+		while (true) {
+			int num = arr[end];
+			cnt[num]++;
+			if (cnt[num] == k + 1) {
+				max = Math.max(max, len);
+				while (true) {
+					len--;
+					cnt[arr[start]]--;
+					if (arr[start] == arr[end]) {
+						start++;
+						break;
+					}
+					start++;
+				}
 			}
-			int len = end-start;
-			ans = Math.max(ans, len);
-			cnt[arr[start]]--;
-			start++;
+			len++;
+			end++;
+			if (end == n)
+				break;
 		}
-		System.out.println(ans);
+		max = Math.max(max, len);
 	}
+
+	public static void init() throws Exception {
+		token = new StringTokenizer(input.readLine());
+		n = Integer.parseInt(token.nextToken());
+		k = Integer.parseInt(token.nextToken());
+
+		arr = new int[n];
+		cnt = new int[100001];
+
+		token = new StringTokenizer(input.readLine());
+		for (int i = 0; i < n; i++) {
+			arr[i] = Integer.parseInt(token.nextToken());
+		}
+
+		max = Integer.MIN_VALUE;
+
+	}
+
+	public static void main(String[] args) throws Exception {
+		init();
+		sol();
+		System.out.println(max);
+	}
+
 }
