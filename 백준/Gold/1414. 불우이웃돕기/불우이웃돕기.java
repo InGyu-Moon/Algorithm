@@ -35,14 +35,13 @@ public class Main {
 		int cnt = 0;
 		while (!pq.isEmpty()) {
 			Node front = pq.poll();
-			if (union(front.from, front.to) && front.w > 0) {
+			if (union(front.from, front.to)) {
 				sum -= front.w;
 				cnt++;
 			}
 		}
 		if (cnt != n - 1)
 			sum = -1;
-//		System.out.println("cnt: " + cnt);
 
 	}
 
