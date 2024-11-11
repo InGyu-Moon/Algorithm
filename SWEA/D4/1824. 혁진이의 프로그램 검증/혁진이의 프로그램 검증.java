@@ -12,30 +12,21 @@ public class Solution {
 	static int DOWN = 2;
 	static int LEFT = 3;
 	static int ALL = 4;
+	static int MEM = 16;
 
 	static int[] dy = { -1, 0, 1, 0 };
 	static int[] dx = { 0, 1, 0, -1 };
 
-	static int dir;
-
-	static int n, m;
-
+	static int n, m, dir;
 	static char[][] arr;
 	static boolean[][][][] visited;
-
-	static int num;
-	static int y, x;
-	static boolean flag;
-
 	static Deque<Pair> que;
+	static int mem;
 
 	public static boolean move(Pair top) {
-		y = top.y;
-		x = top.x;
+		char ch = arr[top.y][top.x];
+		int num = top.mem;
 		dir = top.dir;
-		num = top.num;
-		visited = top.visited;
-		char ch = arr[y][x];
 		// 종료 조건
 		if (ch == '@') {
 			return true;
@@ -78,61 +69,53 @@ public class Solution {
 			else if (ch == '-')
 				num--;
 		}
-		// 이동
-//		y += dy[dir];
-//		x += dx[dir];
-//		y %= n;
-//		x %= m;
 
 		// 메모리
 		num = (num + 16) % 16;
 
 		if (dir == ALL) {
 			for (int i = 0; i < 4; i++) {
-				int tempY = y + dy[i];
-				int tempX = x + dx[i];
-				tempY = (tempY + n) % n;
-				tempX = (tempX + m) % m;
-				if (!visited[tempY][tempX][i][num]) {
-					visited[tempY][tempX][i][num] = true;
-					que.add(new Pair(tempY, tempX, i, num, visited));
-				}
+				int y = top.y + dy[i];
+				int x = top.x + dx[i];
+				y = (y + n) % n;
+				x = (x + m) % m;
+				if (visited[y][x][num][i])
+					continue;
+				visited[y][x][num][i] = true;
+				que.add(new Pair(y, x, num, i));
 			}
 		} else {
-			int tempY = y + dy[dir];
-			int tempX = x + dx[dir];
-			tempY = (tempY + n) % n;
-			tempX = (tempX + m) % m;
-			if (!visited[tempY][tempX][dir][num]) {
-				visited[tempY][tempX][dir][num] = true;
-				que.add(new Pair(tempY, tempX, dir, num, visited));
+			int y = top.y + dy[dir];
+			int x = top.x + dx[dir];
+			y = (y + n) % n;
+			x = (x + m) % m;
+			if (!visited[y][x][num][dir]) {
+				visited[y][x][num][dir] = true;
+				que.add(new Pair(y, x, num, dir));
 			}
 		}
 		return false;
 	}
 
 	public static void sol() {
-		visited[0][0][RIGHT][0] = true;
-		que.add(new Pair(0, 0, RIGHT, 0, visited));
+		que.add(new Pair(0, 0, 0, RIGHT));
+		visited[0][0][0][RIGHT] = true;
 		while (!que.isEmpty()) {
 			Pair top = que.poll();
-			// 이동 후 종료 조건 만족시 종료
 			if (move(top)) {
 				output.append("YES\n");
 				return;
 			}
 		}
 		output.append("NO\n");
-
 	}
 
 	public static void init() throws Exception {
 		token = new StringTokenizer(input.readLine());
 		n = Integer.parseInt(token.nextToken());
 		m = Integer.parseInt(token.nextToken());
-
 		arr = new char[n][m];
-		visited = new boolean[n][m][4][16];
+		visited = new boolean[n][m][16][4];
 		que = new ArrayDeque<Pair>();
 
 		for (int i = 0; i < n; i++) {
@@ -141,11 +124,11 @@ public class Solution {
 				arr[i][j] = str.charAt(j);
 			}
 		}
+
 		// 기타 변수 초기화
-		num = 0;
 		dir = RIGHT;
-		y = x = 0;
-		flag = false;
+		mem = 0;
+
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -156,21 +139,20 @@ public class Solution {
 			sol();
 		}
 		System.out.println(output);
+
 	}
 
 	static class Pair {
 		int y;
 		int x;
+		int mem;
 		int dir;
-		int num;
-		boolean[][][][] visited;
 
-		public Pair(int y, int x, int dir, int num, boolean[][][][] visited) {
+		public Pair(int y, int x, int mem, int dir) {
 			this.y = y;
 			this.x = x;
+			this.mem = mem;
 			this.dir = dir;
-			this.num = num;
-			this.visited = visited;
 		}
 
 	}
