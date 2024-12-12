@@ -18,7 +18,7 @@ public class Main {
 			return;
 		}
 
-		char prev = '\0';
+		char prev = '0';
 		for (int i = 0; i < str.length(); i++) {
 			if (visited[i] || chars[i] == prev)
 				continue;
