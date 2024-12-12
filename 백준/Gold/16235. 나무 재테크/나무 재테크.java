@@ -43,8 +43,10 @@ public class Main {
 				arr[y][x] += age; // 뻇던 양분 복구
 				// 여름에 양분이 될 나무들
 				summer.add(new Pair(y, x, age));
+
 			}
 		}
+
 		addTree();
 	}
 
