@@ -10,12 +10,11 @@ public class Main {
 	static char[] chars, selected;
 	static boolean[] visited;
 
-//	static Set<String> set;
-	static List<String> set;
+	static List<String> list;
 
 	public static void dfs(int depth) {
 		if (depth == str.length()) {
-			set.add(String.valueOf(selected));
+			list.add(String.valueOf(selected));
 			return;
 		}
 
@@ -33,8 +32,7 @@ public class Main {
 	}
 
 	public static void init() throws Exception {
-//		set = new TreeSet<>();
-		set = new ArrayList<>();
+		list = new ArrayList<>();
 		str = input.readLine();
 		chars = new char[str.length()];
 		selected = new char[str.length()];
@@ -50,7 +48,7 @@ public class Main {
 		for (int t = 0; t < T; t++) {
 			init();
 			dfs(0);
-			for (String str : set) {
+			for (String str : list) {
 				output.append(str).append("\n");
 			}
 		}
