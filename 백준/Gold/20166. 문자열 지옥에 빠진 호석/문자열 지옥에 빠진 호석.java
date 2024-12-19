@@ -2,92 +2,73 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-
-	static int[] dy = { -1, -1, -1, 0, 0, 1, 1, 1 };
-	static int[] dx = { -1, 0, 1, -1, 1, -1, 0, 1 };
-
-	static BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-	static StringBuilder output = new StringBuilder();
-	static StringTokenizer token;
-
-	static char[][] arr;
-	static int n, m, k;
-
-	static char[] chars, selected;
-	static int ans;
-
-	static Deque<Pair> que;
-
-	static Map<String, Integer> map;
-
-	public static void sol() throws Exception {
-		for (int i = 0; i < k; i++) {
-			String word = input.readLine();
-			output.append(map.getOrDefault(word, 0)).append("\n");
+	static HashMap<String, Integer> map = new HashMap<>();
+	static int N, M, K, MAX_LENGTH;
+	static int[] dx = {-1,-1,0,1,1,1,0,-1}, dy = {0,1,1,1,0,-1,-1,-1}; // 시계방향
+	static char[][] hell;
+	
+	public static void solve(int x, int y, int depth, String result) {
+		if(map.containsKey(result)) 
+			map.put(result, map.get(result) + 1);
+		
+		if(depth == MAX_LENGTH)
+			return;
+		
+		for(int dir=0;dir< dx.length;dir++) {
+			int nx = x + dx[dir];
+			int ny = y + dy[dir];
+			
+			if(nx < 0)
+				nx = N-1;
+			else if(nx >= N)
+				nx = 0;
+			
+			if(ny < 0)
+				ny = M-1;
+			else if(ny >= M)
+				ny = 0;
+			
+			solve(nx,ny, depth+1, result+hell[nx][ny]);
 		}
+		
 	}
-
-	public static void make() {
-		for (int r = 0; r < n; r++) {
-			for (int c = 0; c < m; c++) {
-				que = new ArrayDeque<Pair>();
-				que.add(new Pair(r, c, String.valueOf(arr[r][c])));
-				while (!que.isEmpty()) {
-					Pair front = que.poll();
-					if (front.str.length() == 5)
-						break;
-					for (int i = 0; i < 8; i++) {
-						int ny = front.y + dy[i];
-						int nx = front.x + dx[i];
-						ny = (ny + n) % n;
-						nx = (nx + m) % m;
-						String temp = front.str + String.valueOf(arr[ny][nx]);
-						map.put(temp, map.getOrDefault(temp, 0) + 1);
-						que.add(new Pair(ny, nx, temp));
-//						if (true) {
-//							System.out.println(
-//									"str: " + temp + ", cnt: " + map.getOrDefault(temp, 0) + ", r: " + r + ", c: " + c);
-//						}
-
-					}
-				}
+	
+	public static void main(String[] args) throws Exception{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+		K = Integer.parseInt(st.nextToken());
+		String[] stringArray = new String[K]; // 마지막 출력을 위한 Array
+		hell = new char[N][M];
+		map = new HashMap<>();
+		MAX_LENGTH = 0; // DFS의 종료를 위한 최대 depth
+		
+		for(int i=0;i<N;i++) {
+			hell[i] = br.readLine().toCharArray();
+		}
+		
+		for(int i=0;i<K;i++) {
+			String favoriteString = br.readLine();
+			MAX_LENGTH = Math.max(MAX_LENGTH, favoriteString.length());
+			map.put(favoriteString, 0);
+			stringArray[i] = favoriteString;
+		}
+		
+		for(int i=0;i<N;i++) {
+			for(int j=0;j<M;j++) {
+				solve(i,j, 1, Character.toString(hell[i][j]));
 			}
 		}
-
-	}
-
-	public static void init() throws Exception {
-		token = new StringTokenizer(input.readLine());
-		n = Integer.parseInt(token.nextToken());
-		m = Integer.parseInt(token.nextToken());
-		k = Integer.parseInt(token.nextToken());
-		arr = new char[n][m];
-		map = new HashMap<String, Integer>();
-		for (int i = 0; i < n; i++) {
-			String temp = input.readLine();
-			for (int j = 0; j < m; j++) {
-				arr[i][j] = temp.charAt(j);
-			}
+		
+		StringBuilder sb = new StringBuilder();
+		
+		for(String key: stringArray) {
+			sb.append(map.get(key)).append("\n");
 		}
+		
+		System.out.println(sb);
+		
 	}
 
-	public static void main(String[] args) throws Exception {
-		init();
-		make();
-		sol();
-		System.out.println(output);
-	}
-
-	static class Pair {
-		int y;
-		int x;
-		String str;
-
-		public Pair(int y, int x, String str) {
-			this.y = y;
-			this.x = x;
-			this.str = str;
-		}
-
-	}
 }
