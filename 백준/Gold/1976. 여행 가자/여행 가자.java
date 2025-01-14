@@ -22,9 +22,7 @@ public class Main {
 		int aRoot = findRoot(a);
 		int bRoot = findRoot(b);
 
-		if (aRoot != bRoot) {
-			root[bRoot] = aRoot;
-		}
+		root[bRoot] = aRoot;
 	}
 
 	public static boolean check(int a, int b) {
@@ -63,8 +61,6 @@ public class Main {
 				int num = Integer.parseInt(token.nextToken());
 				if (num != 1)
 					continue;
-				// i와 j의 부모가 같다.
-//				root[j] = root[i];
 				union(i, j);
 
 			}
