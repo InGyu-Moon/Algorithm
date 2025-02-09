@@ -25,7 +25,7 @@ public class Main {
 				s = m + 1;
 		}
 
-		return s;
+		return e;
 	}
 
 	public static int binaryUpper(int sum, int idx) {
