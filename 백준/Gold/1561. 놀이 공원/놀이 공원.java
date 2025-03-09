@@ -33,10 +33,11 @@ public class Main {
 			if (num < n) {
 				start = mid + 1;
 			} else {
-				result = mid;
+				//result = mid;
 				end = mid - 1;
 			}
 		}
+        result = start;
 		long idx = n - getNum(result - 1);
 		long cnt = 0;
 		for (int i = 0; i < m; i++) {
