@@ -27,14 +27,9 @@ public class Main {
 		long start = 0;
 		long end = n * 30;
 		long result = 0;
-//		System.out.println("n: " + n);
-//		System.out.println("end: " + Long.MAX_VALUE);
-//		System.out.println("start: " + start + ", end: " + end);
 		while (start <= end) {
-//			System.out.println("2");
 			long mid = (start + end) / 2;
 			long num = getNum(mid);
-//			System.out.println("num: " + num);
 			if (num < n) {
 				start = mid + 1;
 			} else {
@@ -42,7 +37,6 @@ public class Main {
 				end = mid - 1;
 			}
 		}
-//		System.out.println(result);
 		long idx = n - getNum(result - 1);
 		long cnt = 0;
 		for (int i = 0; i < m; i++) {
