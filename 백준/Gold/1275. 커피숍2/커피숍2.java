@@ -69,9 +69,6 @@ public class Main {
 			right = parent * 2 + 1;
 			tree[parent] = tree[left] + tree[right];
 		}
-//		for (int i = len - 1; i > 0; i--) {
-//			tree[i] = tree[2 * i] + tree[2 * i + 1];
-//		}
 	}
 
 	public static void init() throws Exception {
@@ -80,7 +77,6 @@ public class Main {
 		q = Integer.parseInt(token.nextToken());
 
 		len = 1 << (int) (Math.log(n) / Math.log(2));
-//		if (len < n) len *= 2;
 		len = len < n ? len * 2 : len;
 		size = len * 2;
 
