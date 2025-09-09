@@ -22,27 +22,11 @@ public class Main {
 	static Taxi taxi;
 	static boolean[] bool;
 
-	static Queue<int[]> que = new ArrayDeque<>();
-	static PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {
-		if (a[FUEL] == b[FUEL]) {
-			if (a[0] == b[0]) {
-				return Integer.compare(a[1], b[1]);
-			}
-			return Integer.compare(a[0], b[0]);
-		}
-		return -Integer.compare(a[FUEL], b[FUEL]);
-	});
-
 	public static void sol() throws Exception {
 		while (find()) {
-//			System.out.println(taxi.fuel);
-			pq.clear();
 			if (!move()) {
 				return;
 			}
-			que.clear();
-//			System.out.println(taxi.fuel);
-//			System.out.println("===");
 		}
 		for (int i = 0; i < m; i++) {
 			if (!bool[i]) {
@@ -53,47 +37,80 @@ public class Main {
 	}
 
 	public static boolean find() throws Exception {
+		Queue<int[]> que = new ArrayDeque<>();
 		boolean[][] visited = new boolean[n][n];
-		pq.add(new int[] { taxi.y, taxi.x, taxi.fuel });
 		if (map[taxi.y][taxi.x] >= 2) {
 			idx = map[taxi.y][taxi.x] - 2;
 			map[taxi.y][taxi.x] = 0;
 			bool[idx] = true;
 			return true;
 		}
-//		visited[taxi.y][taxi.x] = true;
-		while (!pq.isEmpty()) {
-			int[] top = pq.poll();
-			if (visited[top[0]][top[1]])
-				continue;
-			visited[top[0]][top[1]] = true; 
-			if (map[top[0]][top[1]] >= 2) {
-				idx = map[top[0]][top[1]] - 2;
-				map[top[0]][top[1]] = 0;
-				taxi.y = top[0];
-				taxi.x = top[1];
-				taxi.fuel = top[FUEL];
+		visited[taxi.y][taxi.x] = true;
+		que.add(new int[] { taxi.y, taxi.x });
+
+		int dist = 0;
+		PriorityQueue<int[]> cand = new PriorityQueue<>((a, b) -> {
+			if (a[0] == b[0]) {
+				return Integer.compare(a[1], b[1]);
+			}
+			return Integer.compare(a[0], b[0]);
+		});
+
+		while (!que.isEmpty()) {
+
+			int size = que.size();
+
+			for (int i = 0; i < size; i++) {
+				int[] cur = que.poll();
+				int cy = cur[0], cx = cur[1];
+
+				for (int j = 0; j < 4; j++) {
+					int ny = cy + dy[j];
+					int nx = cx + dx[j];
+					if (ny < 0 || nx < 0 || ny >= n || nx >= n)
+						continue;
+					if (visited[ny][nx] || map[ny][nx] == 1)
+						continue;
+
+					visited[ny][nx] = true;
+					if (map[ny][nx] >= 2) {
+						cand.add(new int[] { ny, nx });
+					} else {
+						que.add(new int[] { ny, nx });
+					}
+				}
+			}
+
+			while (!cand.isEmpty()) {
+				int[] top = cand.poll();
+				int py = top[0];
+				int px = top[1];
+				
+				// 다음 레벨(= dist+1)이 연료로 불가능하면 더 진행 불가
+				if (taxi.fuel < dist + 1)
+					return false;
+				
+				taxi.fuel -= (dist + 1);
+				taxi.y = py;
+				taxi.x = px;
+				idx = map[py][px] - 2;
+				map[py][px] = 0;
 				bool[idx] = true;
 				return true;
 			}
-			if (top[FUEL] == 0)
-				continue;
-			for (int i = 0; i < 4; i++) {
-				int ny = top[0] + dy[i];
-				int nx = top[1] + dx[i];
-				if (ny < 0 || nx < 0 || ny >= n || nx >= n || map[ny][nx] == 1 || visited[ny][nx])
-					continue;
-				pq.add(new int[] { ny, nx, top[FUEL] - 1 });
-			}
+			if (taxi.fuel < dist + 1) return false;
+	        dist++;
 		}
 		return false;
 	}
 
 	public static boolean move() throws Exception {
+		Queue<int[]> que = new ArrayDeque<>();
 		// 목적지
 		int y = people[idx].ey;
 		int x = people[idx].ex;
 		boolean[][] visited = new boolean[n][n];
+//		visited[taxi.y][taxi.x] = true;
 		que.add(new int[] { taxi.y, taxi.x, taxi.fuel });
 		while (!que.isEmpty()) {
 			int[] top = que.poll();
@@ -176,12 +193,6 @@ public class Main {
 			this.y = y;
 			this.x = x;
 			this.fuel = fuel;
-		}
-
-		public boolean checkFuel() {
-			if (fuel < 0)
-				return false;
-			return true;
 		}
 	}
 }
