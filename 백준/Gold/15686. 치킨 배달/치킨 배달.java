@@ -15,16 +15,6 @@ public class Main {
 	static int select = 0;
 	static int min = Integer.MAX_VALUE;
 
-	public static void print() {
-		for (int i = 0; i < cnt; i++) {
-			if (selected[i])
-				System.out.print("1 ");
-			else
-				System.out.print("0 ");
-		}
-		System.out.println();
-	}
-
 	public static int sol() {
 		int sum = 0;
 		List<int[]> list = new ArrayList<>();
@@ -45,11 +35,9 @@ public class Main {
 					int y = curr[0];
 					int x = curr[1];
 					int diff = Math.abs(y - i) + Math.abs(x - j);
-//					System.out.println("치킨 거리: " + diff);
 					min = Math.min(min, diff);
 				}
 				sum += min;
-//				System.out.println("sum: " + sum + " ====");
 			}
 		}
 		if (!flag)
@@ -64,10 +52,8 @@ public class Main {
 		if (depth == cnt) {
 			if (select != m)
 				return;
-//			print();
 			int diff = sol();
 			if (diff != -1) {
-//				System.out.println("diff: " + diff);
 				min = Math.min(min, diff);
 			}
 			return;
