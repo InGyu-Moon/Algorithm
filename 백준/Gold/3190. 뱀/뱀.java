@@ -47,7 +47,6 @@ public class Main {
 		while (true) {
 
 			time++;
-//			System.out.println("time: " + time + ", dir: " + list[time]);
 
 			// 1. 먼저 뱀은 몸길이를 늘려 머리를 다음칸에 위치시킨다.
 			int[] top = snake.peekFirst();
@@ -65,29 +64,16 @@ public class Main {
 				map[ny][nx] = SNAKE;
 				map[tail[0]][tail[1]] = NOTHING;
 			}
-			boolean flag = 10000 < time;
-			if (!flag && list[time] == 'L') {
+			if (list[time] == 'L') {
 				dir--;
 				dir += 4;
 			}
-			if (!flag && list[time] == 'D') {
+			if (list[time] == 'D') {
 				dir++;
 			}
 			dir %= 4;
-//			print();
 		}
 	}
-
-	public static void print() {
-		for (int i = 1; i <= n; i++) {
-			for (int j = 1; j <= n; j++) {
-				System.out.print(map[i][j] + " ");
-			}
-			System.out.println();
-		}
-		System.out.println("-------------------------");
-	}
-
 	public static void main(String[] args) throws Exception {
 		init();
 		ans();
