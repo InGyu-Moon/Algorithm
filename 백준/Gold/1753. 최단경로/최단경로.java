@@ -2,81 +2,78 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+
 	static BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 	static StringBuilder output = new StringBuilder();
 	static StringTokenizer token;
 
-	static int V, E;
-	static int start;
+	static int INF = 987654321;
 
-	static int[] d;
-	static Map<Integer, List<Edge>> edges;
-	static PriorityQueue<Edge> pq = new PriorityQueue<>((a, b) -> {
-		return Integer.compare(a.w, b.w);
+	static int v, e, start;
+
+	public static List<Node>[] graph;
+	public static int[] d;
+
+	public static PriorityQueue<Node> pq = new PriorityQueue<>((Node a, Node b) -> {
+		return Integer.compare(a.val, b.val);
 	});
 
-	private static void sol() {
-		pq.offer(new Edge(start, d[start]));
+	public static void sol() {
+		pq.add(new Node(start, 0));
 		while (!pq.isEmpty()) {
-			Edge front = pq.poll();
-			if (front.w > d[front.v])
+			Node front = pq.poll();
+			List<Node> list = graph[front.to];
+			if (list == null || front.val > d[front.to])
 				continue;
-
-			for (Edge edge : edges.get(front.v)) { // why?
-				if (d[edge.v] > front.w + edge.w) {
-					d[edge.v] = front.w + edge.w;
-					pq.offer(new Edge(edge.v, d[edge.v]));
+			for (Node node : list) {
+				if (d[node.to] > d[front.to] + node.val) {
+					d[node.to] = d[front.to] + node.val;
+					pq.add(new Node(node.to, d[node.to]));
 				}
 			}
 		}
-
+		for (int i = 1; i <= v; i++) {
+			if (d[i] >= INF)
+				System.out.println("INF");
+			else
+				System.out.println(d[i]);
+		}
 	}
 
-	private static void init() throws Exception {
+	public static void init() throws Exception {
 		token = new StringTokenizer(input.readLine());
-		V = Integer.parseInt(token.nextToken());
-		E = Integer.parseInt(token.nextToken());
+		v = Integer.parseInt(token.nextToken());
+		e = Integer.parseInt(token.nextToken());
 		start = Integer.parseInt(input.readLine());
-		edges = new HashMap<>();
-		d = new int[V + 1];
-		for (int i = 1; i <= V; i++) {
-			edges.put(i, new ArrayList<Edge>());
-			d[i] = Integer.MAX_VALUE;
+		graph = new ArrayList[v + 1];
+		d = new int[v + 1];
+		for (int i = 1; i <= v; i++) {
+			d[i] = INF;
 		}
 		d[start] = 0;
-		// 간선 정보 입력
-		for (int i = 0; i < E; i++) {
+		for (int i = 0; i < e; i++) {
 			token = new StringTokenizer(input.readLine());
-			int u = Integer.parseInt(token.nextToken());
-			int v = Integer.parseInt(token.nextToken());
-			int w = Integer.parseInt(token.nextToken());
-			edges.get(u).add(new Edge(v, w));
+			int from = Integer.parseInt(token.nextToken());
+			int to = Integer.parseInt(token.nextToken());
+			int val = Integer.parseInt(token.nextToken());
+			if (graph[from] == null)
+				graph[from] = new ArrayList<>();
+			graph[from].add(new Node(to, val));
 		}
-
 	}
 
 	public static void main(String[] args) throws Exception {
 		init();
 		sol();
-
-		for (int i = 1; i <= V; i++) {
-			if (d[i] == Integer.MAX_VALUE)
-				output.append("INF\n");
-			else {
-				output.append(d[i]).append("\n");
-			}
-		}
-		System.out.println(output);
-
 	}
 
-	static class Edge {
-		int v, w;
+	public static class Node {
+		int to;
+		int val;
 
-		public Edge(int v, int w) {
-			this.v = v;
-			this.w = w;
+		public Node(int to, int val) {
+			this.to = to;
+			this.val = val;
 		}
-
 	}
 }
