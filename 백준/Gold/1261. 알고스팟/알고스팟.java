@@ -33,7 +33,12 @@ public class Main {
 				if (visited[y][x] + arr[ny][nx] >= visited[ny][nx])
 					continue;
 				visited[ny][nx] = visited[y][x] + arr[ny][nx];
-				que.add(new int[] { ny, nx });
+//				que.add(new int[] { ny, nx });
+				if(arr[ny][nx]==0) {
+					que.addFirst(new int[] { ny, nx });
+				}else {
+					que.addLast(new int[] { ny, nx });
+				}
 			}
 		}
 
